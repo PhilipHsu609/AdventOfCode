@@ -1,3 +1,5 @@
 .vscode
-solve
+build
 rust-project.json
+
+*.gch
