@@ -1,3 +1,4 @@
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <regex>
@@ -5,10 +6,14 @@
 #include <string>
 #include <vector>
 
+namespace fs = std::filesystem;
+
+const std::string input_path = "./input.txt";
+
 struct Sample {
-    int red{};
-    int green{};
-    int blue{};
+    int red = 0;
+    int green = 0;
+    int blue = 0;
 };
 
 std::vector<std::string> split(const std::string &s, char delimiter) {
@@ -21,13 +26,13 @@ std::vector<std::string> split(const std::string &s, char delimiter) {
     return tokens;
 }
 
-std::vector<Sample> parseLine(std::vector<std::string> &vec) {
+std::vector<Sample> parse_line(std::vector<std::string> &vec) {
     std::vector<Sample> samples;
     std::smatch matches;
 
     for (auto &sample : vec) {
         Sample s;
-        std::regex pattern{"(\\d+) (red|green|blue)"};
+        std::regex pattern("(\\d+) (red|green|blue)");
         while (std::regex_search(sample, matches, pattern)) {
             if (matches[2] == "red") {
                 s.red = std::stoi(matches[1]);
@@ -44,32 +49,36 @@ std::vector<Sample> parseLine(std::vector<std::string> &vec) {
     return samples;
 }
 
-bool isPossible(const Sample &s) {
+bool is_possible(const Sample &s) {
     return s.red <= 12 && s.green <= 13 && s.blue <= 14;
 }
 
 void part1() {
-    std::ifstream input{"input.txt"};
+    std::ifstream input(input_path);
     std::string line;
-
-    int sum = 0;
     std::smatch matches;
+    int sum = 0;
+
+    if (!input.is_open()) {
+        std::cerr << "File not found" << std::endl;
+        return;
+    }
 
     while (!input.eof()) {
         std::getline(input, line);
-        std::regex pattern{"^Game (\\d+):"};
-        bool flag{true};
+        std::regex pattern("^Game (\\d+):");
+        bool flag = true;
 
-        int id{-1};
+        int id = -1;
 
         std::regex_search(line, matches, pattern);
         id = std::stoi(matches[1]);
 
         auto samples{split(line.substr(line.find(':') + 1), ';')};
-        auto parsed_samples{parseLine(samples)};
+        auto parsed_samples{parse_line(samples)};
 
         for (auto &sample : parsed_samples) {
-            if (!isPossible(sample)) {
+            if (!is_possible(sample)) {
                 flag = false;
                 break;
             }
@@ -80,23 +89,28 @@ void part1() {
         }
     }
 
+    input.close();
+
     std::cout << "Part1: " << sum << std::endl;
 }
 
 void part2() {
-    std::ifstream input{"input.txt"};
+    std::ifstream input(input_path);
     std::string line;
-
-    int sum{};
     std::smatch matches;
+    int sum = 0;
+
+    if (!input.is_open()) {
+        std::cerr << "Error opening file" << std::endl;
+        return;
+    }
 
     while (!input.eof()) {
         std::getline(input, line);
-        std::regex pattern{"^Game (\\d+):"};
-        bool flag{true};
+        std::regex pattern("^Game (\\d+):");
 
-        auto samples{split(line.substr(line.find(':') + 1), ';')};
-        auto parsed_samples{parseLine(samples)};
+        auto samples = split(line.substr(line.find(':') + 1), ';');
+        auto parsed_samples = parse_line(samples);
 
         Sample fewest;
         for (auto &sample : parsed_samples) {
@@ -108,10 +122,13 @@ void part2() {
         sum += fewest.red * fewest.green * fewest.blue;
     }
 
+    input.close();
+
     std::cout << "Part2: " << sum << std::endl;
 }
 
 int main() {
+    fs::current_path(fs::absolute(fs::path(__FILE__).remove_filename()));
     part1();
     part2();
     return 0;
