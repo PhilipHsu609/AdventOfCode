@@ -1,5 +1,6 @@
-.vscode
-build
-rust-project.json
+/.vscode/
+/build/
+
+/rust-project.json
 
 *.gch

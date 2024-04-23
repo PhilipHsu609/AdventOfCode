@@ -11,3 +11,8 @@ std::vector<std::string> split(const std::string &s, char delim) {
     }
     return result;
 }
+
+template <typename T>
+T lcm(T a, T b) {
+    return a * b / std::__gcd(a, b);
+}

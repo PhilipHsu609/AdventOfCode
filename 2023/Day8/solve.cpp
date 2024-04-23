@@ -6,6 +6,8 @@
 #include <unordered_set>
 #include <vector>
 
+#include "../../Utils/utils.hpp"
+
 namespace fs = std::filesystem;
 
 const std::string input_path = "./input.txt";
@@ -58,10 +60,6 @@ void part1() {
     }
 
     std::cout << "Problem 1: " << steps << std::endl;
-}
-
-long long lcm(long long a, long long b) {
-    return a * b / std::__gcd(a, b);
 }
 
 void part2() {
@@ -132,7 +130,7 @@ void part2() {
     long long lcm = steps[0];
     int n = steps.size();
     for (int i = 1; i < n; i++) {
-        lcm = ::lcm(lcm, steps[i]);
+        lcm = ::lcm<long long>(lcm, steps[i]);
     }
 
     std::cout << "Problem 2: " << lcm << std::endl;
