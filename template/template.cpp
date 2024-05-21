@@ -41,7 +41,7 @@ int main() {
     assert(part1(example) == part1_example_ans && "Part1 example failed");
     assert(part2(example) == part2_example_ans && "Part2 example failed");
 
-    fmt::print("Part1: {}", part1(input));
-    fmt::print("Part2: {}", part2(input));
+    fmt::print("Part1: {}\n", part1(input));
+    fmt::print("Part2: {}\n", part2(input));
     return 0;
 }
