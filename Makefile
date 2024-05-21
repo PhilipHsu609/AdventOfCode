@@ -1,3 +1,5 @@
+SHELL = /bin/bash
+
 CXX = clang++
 CXXFLAGS = -Wall -Wextra -std=c++17
 
@@ -14,6 +16,11 @@ init:
 
 $(BUILD_DIR)/cpp/Day%: 2023/Day%/solve.cpp
 	$(CXX) $(CXXFLAGS) $< -o $@
+
+add:
+	mkdir -p 2023/Day$(day)
+	touch 2023/Day$(day)/{input,example}.txt
+	cp template/template.cpp 2023/Day$(day)/solve.cpp
 
 clean:
 	rm -f $(CPP_OBJECTS)
