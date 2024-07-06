@@ -1,12 +1,13 @@
+#include "utils.hpp"
+
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <numeric>
 #include <regex>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
-
-#include "../../Utils/utils.hpp"
 
 namespace fs = std::filesystem;
 
@@ -92,10 +93,11 @@ void part2() {
     input.close();
 
     /*
-        In the second problem, each starting node will enter a cycle after following the instructions,
-        and there is exactly one destination node (i.e., node ending with 'Z') along the path.
-        We also found that the destination node is at the end of the cycle.
-        If we took u steps to reach the destination node, then we will reach the destination node again after u steps.
+        In the second problem, each starting node will enter a cycle after following the
+       instructions, and there is exactly one destination node (i.e., node ending with
+       'Z') along the path. We also found that the destination node is at the end of the
+       cycle. If we took u steps to reach the destination node, then we will reach the
+       destination node again after u steps.
     */
     std::vector<int> steps;
     for (auto &node : nodes) {
@@ -115,7 +117,9 @@ void part2() {
 
                 if (u.back() == 'Z') {
                     if (seen.find(u) != seen.end()) {
-                        std::cout << "Cycle detected at " << u << " after " << step - seen[u] << " steps begin at step " << seen[u] << std::endl;
+                        std::cout << "Cycle detected at " << u << " after "
+                                  << step - seen[u] << " steps begin at step " << seen[u]
+                                  << std::endl;
                         stop = true;
                     } else {
                         seen[u] = step;
@@ -130,7 +134,7 @@ void part2() {
     long long lcm = steps[0];
     int n = steps.size();
     for (int i = 1; i < n; i++) {
-        lcm = ::lcm<long long>(lcm, steps[i]);
+        lcm = std::lcm(lcm, steps[i]);
     }
 
     std::cout << "Problem 2: " << lcm << std::endl;

@@ -9,7 +9,7 @@
 #include <string_view>
 #include <vector>
 
-#include "../../Utils/utils.hpp"
+#include "utils.hpp"
 
 namespace fs = std::filesystem;
 
@@ -25,7 +25,7 @@ void part1(const fs::path &input_path) {
     long long result = 0LL;
 
     while (std::getline(input, line)) {
-        std::vector<int> values = Utils::split<int>(line, ' ');
+        std::vector<int> values = utils::split<int>(line, ' ');
         int n = static_cast<int>(values.size());
 
         while (n > 2) {
@@ -53,7 +53,7 @@ void part2(const fs::path &input_path) {
     long long result = 0LL;
 
     while (std::getline(input, line)) {
-        std::vector<int> values = Utils::split<int>(line, ' ');
+        std::vector<int> values = utils::split<int>(line, ' ');
         const int n = static_cast<int>(values.size());
         int start = 0;
 
