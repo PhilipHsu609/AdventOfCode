@@ -1,10 +1,12 @@
-#include <charconv>    // from_chars
-#include <sstream>     // stringstream
-#include <string>      // string, getline
-#include <type_traits> // is_integral
-#include <vector>      // vector
+#pragma once
 
-namespace Utils {
+#include <charconv>    // std::from_chars
+#include <sstream>     // std::stringstream
+#include <string>      // std::getline
+#include <type_traits> // std::is_integral
+#include <vector>      // std::vector
+
+namespace utils {
 template <typename T = std::string>
 inline std::vector<T> split(const std::string &s, char delim) {
     std::vector<T> result;
@@ -26,4 +28,4 @@ inline std::vector<T> split(const std::string &s, char delim) {
     }
     return result;
 }
-} // namespace Utils
+} // namespace utils

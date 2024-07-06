@@ -1,26 +1,42 @@
-SHELL = /bin/bash
+SHELL := /bin/bash
+BIN_DIR := bin
+VCPKG_DIR := $(HOME)/package/vcpkg/installed/x64-linux
+
+CPP_SOURCES = $(wildcard src/$(YEAR)/Day*/solve.cpp)
+CPP_EXES = $(patsubst src/%/solve.cpp, $(BIN_DIR)/cpp/%, $(CPP_SOURCES))
+
+RUST_SOURCES = $(wildcard src/$(YEAR)/Day*/solve.rs)
+RUST_EXES = $(patsubst src/%/solve.rs, $(BIN_DIR)/rust/%, $(RUST_SOURCES))
 
 CXX = clang++
-CXXFLAGS = -Wall -Wextra -std=c++17
+CXXFLAGS = -Wall -Wextra -std=c++17 -I$(VCPKG_DIR)/include -I./include -L$(VCPKG_DIR)/lib -lfmt
 
-BUILD_DIR = build
-CPP_SOURCES = $(wildcard 2023/Day*/solve.cpp)
-CPP_OBJECTS = $(patsubst 2023/Day%/solve.cpp,$(BUILD_DIR)/cpp/Day%,$(CPP_SOURCES))
+.PHONY: all init add clean help
 
-all: init $(CPP_OBJECTS)
+help:
+	@echo "Usage: make [all|init|add|clean] [YEAR=XXXX] [DAY=XX]"
+	@echo "  all: compile all cpp solutions"
+	@echo "  init: create bin directory"
+	@echo "  add: create new day directory and copy template"
+	@echo "  clean: remove all compiled binaries"
+
+all: init $(CPP_EXES) $(RUST_EXES)
 
 init:
-	mkdir -p $(BUILD_DIR)
-	mkdir -p $(BUILD_DIR)/cpp
-	mkdir -p $(BUILD_DIR)/rust
-
-$(BUILD_DIR)/cpp/Day%: 2023/Day%/solve.cpp
-	$(CXX) $(CXXFLAGS) $< -o $@
+	mkdir -p $(BIN_DIR)
+	mkdir -p $(BIN_DIR)/cpp/$(YEAR)
+	mkdir -p $(BIN_DIR)/rust/$(YEAR)
 
 add:
-	mkdir -p 2023/Day$(day)
-	touch 2023/Day$(day)/{input,example}.txt
-	cp template/template.cpp 2023/Day$(day)/solve.cpp
+	mkdir -p $(YEAR)/Day$(DAY)
+	touch $(YEAR)/Day$(DAY)/{input,example}.txt
+	cp template/template.cpp $(YEAR)/Day$(DAY)/solve.cpp
+
+$(BIN_DIR)/cpp/%: src/%/solve.cpp
+	$(CXX) $< $(CXXFLAGS) -o $@
+
+$(BIN_DIR)/rust/%: src/%/solve.rs
+	rustc $< -o $@
 
 clean:
-	rm -f $(CPP_OBJECTS)
+	rm -f $(CPP_EXES)

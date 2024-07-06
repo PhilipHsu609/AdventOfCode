@@ -1,5 +1,6 @@
-use std::fs;
 use std::collections::HashMap;
+use std::path::Path;
+use std::{env, file, fs};
 
 fn part1() {
     let input = fs::read_to_string("input.txt").unwrap();
@@ -59,6 +60,9 @@ fn part2() {
 }
 
 fn main() {
+    let path = Path::new(file!());
+    env::set_current_dir(path.parent().unwrap()).unwrap();
+
     part1();
     part2();
 }

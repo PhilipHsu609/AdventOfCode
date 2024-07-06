@@ -1,10 +1,10 @@
-#include <fmt/core.h> // print
+#include <fmt/core.h> // fmt::print
 
 #include <cassert>    // assert
-#include <cstdlib>    // exit
-#include <filesystem> // path, current_path, absolute
-#include <fstream>    // ifstream
-#include <string>     // string, getline
+#include <cstdlib>    // std::exit
+#include <filesystem> // std::filesystem
+#include <fstream>    // std::ifstream
+#include <string>     // std::getline
 
 namespace fs = std::filesystem;
 

@@ -1,3 +1,5 @@
+#include "utils.hpp"
+
 #include <algorithm>
 #include <climits>
 #include <filesystem>
@@ -11,8 +13,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include "../../Utils/utils.hpp"
-
 namespace fs = std::filesystem;
 
 using Range = std::tuple<long long, long long, long long>;
@@ -20,12 +20,9 @@ using Range = std::tuple<long long, long long, long long>;
 const std::string input_path = "./input.txt";
 
 const std::vector<std::string> keys{
-    "seed-to-soil map:",
-    "soil-to-fertilizer map:",
-    "fertilizer-to-water map:",
-    "water-to-light map:",
-    "light-to-temperature map:",
-    "temperature-to-humidity map:",
+    "seed-to-soil map:",         "soil-to-fertilizer map:",
+    "fertilizer-to-water map:",  "water-to-light map:",
+    "light-to-temperature map:", "temperature-to-humidity map:",
     "humidity-to-location map:"};
 
 void part1() {
@@ -61,9 +58,9 @@ void part1() {
         } else {
             std::regex pattern("(\\d+) (\\d+) (\\d+)");
             std::regex_search(line, matches, pattern);
-            ranges[cur_key].insert(
-                std::make_tuple(std::stoll(matches[2]), std::stoll(matches[1]), std::stoll(matches[3]))
-                // (src, dst, len)
+            ranges[cur_key].insert(std::make_tuple(
+                std::stoll(matches[2]), std::stoll(matches[1]), std::stoll(matches[3]))
+                                   // (src, dst, len)
             );
         }
     }
@@ -76,7 +73,8 @@ void part1() {
 
         for (auto &key : keys) {
             for (auto &range : ranges[key]) {
-                if (loc >= std::get<0>(range) && loc <= std::get<0>(range) + std::get<2>(range) - 1) {
+                if (loc >= std::get<0>(range) &&
+                    loc <= std::get<0>(range) + std::get<2>(range) - 1) {
                     loc = std::get<1>(range) + loc - std::get<0>(range);
                     break;
                 }
@@ -103,14 +101,13 @@ void part2() {
 
     // Read seeds
     std::getline(input, line);
-    std::vector<std::string> seeds = split(line, ' ');
+    std::vector<std::string> seeds = utils::split(line, ' ');
     for (std::size_t i = 1; i < seeds.size(); i += 2) {
         long long seed_start = std::stoll(seeds[i]);
         long long len = std::stoll(seeds[i + 1]);
 
-        seed_ranges.push_back(
-            std::make_tuple(seed_start, seed_start + len, 0)
-            // (seed_start, seed_end, level)
+        seed_ranges.push_back(std::make_tuple(seed_start, seed_start + len, 0)
+                              // (seed_start, seed_end, level)
         );
     }
 
@@ -129,8 +126,8 @@ void part2() {
             std::regex pattern("(\\d+) (\\d+) (\\d+)");
             std::regex_search(line, matches, pattern);
             // (src, dst, len)
-            ranges[cur_key].insert(
-                std::make_tuple(std::stoll(matches[2]), std::stoll(matches[1]), std::stoll(matches[3])));
+            ranges[cur_key].insert(std::make_tuple(
+                std::stoll(matches[2]), std::stoll(matches[1]), std::stoll(matches[3])));
         }
     }
 
@@ -165,14 +162,12 @@ void part2() {
             }
 
             if (src_start < r_start) {
-                seed_ranges.push_back(
-                    std::make_tuple(src_start, r_start, level));
+                seed_ranges.push_back(std::make_tuple(src_start, r_start, level));
                 src_start = r_start;
             }
 
             if (src_end > r_end) {
-                seed_ranges.push_back(
-                    std::make_tuple(r_end, src_end, level));
+                seed_ranges.push_back(std::make_tuple(r_end, src_end, level));
                 src_end = r_end;
             }
 
@@ -183,8 +178,7 @@ void part2() {
         }
 
         if (!overlap) {
-            seed_ranges.push_back(
-                std::make_tuple(src_start, src_end, level + 1));
+            seed_ranges.push_back(std::make_tuple(src_start, src_end, level + 1));
         }
     }
 
