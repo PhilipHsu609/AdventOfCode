@@ -28,9 +28,9 @@ init:
 	mkdir -p $(BIN_DIR)/rust/$(YEAR)
 
 add:
-	mkdir -p $(YEAR)/Day$(DAY)
-	touch $(YEAR)/Day$(DAY)/{input,example}.txt
-	cp template/template.cpp $(YEAR)/Day$(DAY)/solve.cpp
+	mkdir -p src/$(YEAR)/Day$(DAY)
+	touch src/$(YEAR)/Day$(DAY)/{input,example}.txt
+	cp template/solve.cpp src/$(YEAR)/Day$(DAY)/solve.cpp
 
 $(BIN_DIR)/cpp/%: src/%/solve.cpp
 	$(CXX) $< $(CXXFLAGS) -o $@
