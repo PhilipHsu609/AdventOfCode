@@ -26,8 +26,8 @@ target_compile_options(compile_flags_interface INTERFACE
     -Wold-style-cast
     -Wcast-align
     -Woverloaded-virtual
-    -Wconversion
-    -Wsign-conversion
+
+    # -Wconversion
     -Wmisleading-indentation
     -Wnull-dereference
     -pedantic
