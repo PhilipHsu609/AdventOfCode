@@ -2,6 +2,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/cpp)
 
 set(SOLUTIONS
     Day1/solve.cpp
+    Day2/solve.cpp
 )
 
 foreach(SOLUTION ${SOLUTIONS})
