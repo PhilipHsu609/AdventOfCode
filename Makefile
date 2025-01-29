@@ -2,13 +2,18 @@ SHELL := /bin/bash
 BIN_DIR := bin
 
 BUILD_TYPE ?= Debug
+BUILD_RUST ?= 0
 YEAR ?= 2023
 
 RUST_SOURCES = $(wildcard src/$(YEAR)/Day*/solve.rs)
 RUST_EXES = $(patsubst src/$(YEAR)/%/solve.rs, $(BIN_DIR)/rust/$(YEAR)_%, $(RUST_SOURCES))
 
-CMAKE_FLAGS=-DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE}
-CMAKE_COMPILER_FLAGS=-DCMAKE_CXX_COMPILER:STRING=clang++ -DCMAKE_C_COMPILER:STRING=clang
+CMAKE_EXPORT_COMPILE_COMMANDS := -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE
+CMAKE_BUILD_TYPE_FLAG := -DCMAKE_BUILD_TYPE:STRING=${BUILD_TYPE}
+CMAKE_CXX_COMPILER_FLAG := -DCMAKE_CXX_COMPILER:STRING=clang++
+CMAKE_C_COMPILER_FLAG := -DCMAKE_C_COMPILER:STRING=clang
+
+CMAKE_FLAGS := $(CMAKE_EXPORT_COMPILE_COMMANDS) $(CMAKE_BUILD_TYPE_FLAG) $(CMAKE_CXX_COMPILER_FLAG) $(CMAKE_C_COMPILER_FLAG)
 
 .PHONY: all build init add clean help
 
@@ -19,18 +24,16 @@ help:
 	@echo "  add: create new day directory and copy template"
 	@echo "  clean: remove all compiled binaries"
 
-all: init config build $(RUST_EXES)
+all: init config build
 	
 config:
-	cmake ${CMAKE_FLAGS} ${CMAKE_COMPILER_FLAGS} -S . -B build
+	cmake ${CMAKE_FLAGS} -S . -B build
 
-build:
+build: $(if $(filter 1,$(BUILD_RUST)),$(RUST_EXES))
 	cmake --build build
 
 init:
-	mkdir -p $(BIN_DIR)
-	mkdir -p $(BIN_DIR)/cpp
-	mkdir -p $(BIN_DIR)/rust
+	mkdir -p $(BIN_DIR)/{cpp,rust}
 
 add:
 	mkdir -p src/$(YEAR)/Day$(DAY)
@@ -41,4 +44,4 @@ $(BIN_DIR)/rust/$(YEAR)_%: src/$(YEAR)/%/solve.rs
 	rustc $< -o $@
 
 clean:
-	rm -rf bin
+	rm -rf $(BIN_DIR)
