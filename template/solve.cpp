@@ -1,47 +1,47 @@
-#include <fmt/core.h> // fmt::print
+#include "utils.hpp"
 
-#include <cassert>    // assert
-#include <cstdlib>    // std::exit
-#include <filesystem> // std::filesystem
-#include <fstream>    // std::ifstream
-#include <string>     // std::getline
+#include <fmt/core.h>
+
+#include <cassert>
+#include <cstdlib>
+#include <filesystem>
+#include <string>
+#include <vector>
 
 namespace fs = std::filesystem;
 
-int part1(const fs::path &input_path) {
-    std::ifstream input(input_path);
+// Custom input parser - modify based on problem
+auto read_input(const fs::path &path) { return utils::read_lines(path); }
 
-    if (!input.is_open()) {
-        fmt::print(stderr, "File not found\n");
-        std::exit(1);
-    }
+// Helper functions here
 
+template <typename T>
+auto part1(const T &input) {
     return 0;
 }
 
-int part2(const fs::path &input_path) {
-    std::ifstream input(input_path);
-
-    if (!input.is_open()) {
-        fmt::print(stderr, "File not found\n");
-        std::exit(1);
-    }
-
+template <typename T>
+auto part2(const T &input) {
     return 0;
 }
 
 int main() {
-    fs::current_path(fs::absolute(fs::path(__FILE__).remove_filename()));
+    utils::set_working_dir(__FILE__);
 
-    const fs::path example = "./example.txt";
-    const fs::path input = "./input.txt";
-    const int part1_example_ans = 0;
-    const int part2_example_ans = 0;
+    const auto example = read_input("./example.txt");
+    const auto input = read_input("./input.txt");
+    const auto part1_example_ans = 0;
+    const auto part2_example_ans = 0;
 
     assert(part1(example) == part1_example_ans && "Part1 example failed");
     assert(part2(example) == part2_example_ans && "Part2 example failed");
 
-    fmt::print("Part1: {}\n", part1(input));
-    fmt::print("Part2: {}\n", part2(input));
+    utils::Timer timer;
+    auto p1 = part1(input);
+    fmt::print("Part1: {} ({:.3f}ms)\n", p1, timer.elapsed_and_reset());
+
+    auto p2 = part2(input);
+    fmt::print("Part2: {} ({:.3f}ms)\n", p2, timer.elapsed());
+
     return 0;
 }
