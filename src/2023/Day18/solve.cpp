@@ -1,13 +1,14 @@
-#include <fmt/core.h> // fmt::print
+#include <fmt/core.h>
 
-#include <array>      // std::array
-#include <cassert>    // assert
-#include <cstdlib>    // std::exit
-#include <filesystem> // std::filesystem
-#include <fstream>    // std::ifstream
-#include <sstream>    // std::stringstream
-#include <string>     // std::getline
+#include <array>
+#include <cassert>
+#include <cstdlib>
+#include <filesystem>
+#include <fstream>
+#include <sstream>
+#include <string>
 #include <type_traits>
+#include <vector>
 
 namespace fs = std::filesystem;
 

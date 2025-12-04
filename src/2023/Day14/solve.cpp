@@ -1,11 +1,12 @@
-#include <fmt/core.h> // fmt::print
+#include <fmt/core.h>
 
-#include <cassert>       // assert
-#include <cstdlib>       // std::exit
-#include <filesystem>    // std::filesystem
-#include <fstream>       // std::ifstream
-#include <string>        // std::getline
-#include <unordered_map> // std::unordered_map
+#include <cassert>
+#include <cstdlib>
+#include <filesystem>
+#include <fstream>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 namespace fs = std::filesystem;
 
