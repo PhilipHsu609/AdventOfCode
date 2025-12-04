@@ -35,4 +35,9 @@ target_compile_options(compile_flags_interface INTERFACE
     $<$<CONFIG:RELEASE>:-O3>
 )
 
+# Build utils library
+add_library(aoc_utils util/utils.cpp)
+target_include_directories(aoc_utils PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(aoc_utils PUBLIC compile_flags_interface)
+
 add_subdirectory(src)

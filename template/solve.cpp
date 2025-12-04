@@ -2,7 +2,6 @@
 
 #include <fmt/core.h>
 
-#include <cassert>
 #include <cstdlib>
 #include <filesystem>
 #include <string>
@@ -33,8 +32,8 @@ int main() {
     const auto part1_example_ans = 0;
     const auto part2_example_ans = 0;
 
-    assert(part1(example) == part1_example_ans && "Part1 example failed");
-    assert(part2(example) == part2_example_ans && "Part2 example failed");
+    utils::assert_eq(part1(example), part1_example_ans, "Part1 example failed");
+    utils::assert_eq(part2(example), part2_example_ans, "Part2 example failed");
 
     utils::Timer timer;
     auto p1 = part1(input);
