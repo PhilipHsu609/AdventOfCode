@@ -11,6 +11,9 @@ project(
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED on)
 
+# Include custom CMake modules
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+
 # vcpkg dependencies
 find_package(fmt CONFIG REQUIRED)
 
