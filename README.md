@@ -2,31 +2,27 @@
 
 Personal solutions to [Advent of Code](https://adventofcode.com) puzzles in C++ and Rust.
 
-## Quick Start
+## Usage
 
 ```bash
-# Create new day (auto-detects current year)
+# Create and run (auto-detects current year)
 make add DAY=5
-
-# Run solution
 make run DAY=5
 
-# Rust support
+# Rust
 make add DAY=5 LANGUAGE=rust
 make run DAY=5 LANGUAGE=rust
 
-# Build all C++ solutions
-make all
+# Regenerate rust-project.json for IDE support
+make rust-project
 ```
 
 ## Structure
 
 ```
-src/
-  YYYY/
-    Day01/
-      solve.cpp     # C++ solution
-      solve.rs      # Rust solution (optional)
-      input.txt     # Puzzle input
-      example.txt   # Example input
+src/YYYY/DayXX/
+  solve.cpp       # C++ solution
+  solve.rs        # Rust solution (optional)
+  input.txt
+  example.txt
 ```

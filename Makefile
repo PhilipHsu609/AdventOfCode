@@ -17,15 +17,21 @@ CMAKE_C_COMPILER_FLAG := -DCMAKE_C_COMPILER:STRING=clang
 
 CMAKE_FLAGS := $(CMAKE_EXPORT_COMPILE_COMMANDS) $(CMAKE_CXX_COMPILER_FLAG) $(CMAKE_C_COMPILER_FLAG)
 
-.PHONY: all build init add run clean help
+.PHONY: all build init add run clean rust-project help
+
+# Compile utility binary only if source is newer
+bin/util/generate_rust_project: util/generate_rust_project.rs
+	@mkdir -p bin/util
+	@rustc util/generate_rust_project.rs -o bin/util/generate_rust_project
 
 help:
 	@echo "Usage: make [target] [YEAR=XXXX] [DAY=XX] [LANGUAGE=cpp|rust]"
 	@echo ""
-	@echo "  all   - compile all solutions"
-	@echo "  add   - create new day directory and copy template"
-	@echo "  run   - build and run specific solution"
-	@echo "  clean - remove all compiled binaries"
+	@echo "  all          - compile all solutions"
+	@echo "  add          - create new day directory and copy template"
+	@echo "  run          - build and run specific solution"
+	@echo "  rust-project - regenerate rust-project.json for rust-analyzer"
+	@echo "  clean        - remove all compiled binaries"
 	@echo ""
 	@echo "Examples:"
 	@echo "  make add DAY=5              - create Day05 (C++)"
@@ -49,6 +55,9 @@ add:
 	@touch $(DAY_DIR)/input.txt $(DAY_DIR)/example.txt
 	@if [ "$(LANGUAGE)" = "rust" ]; then \
 		cp template/solve.rs $(DAY_DIR)/solve.rs; \
+		echo "Updating rust-project.json..."; \
+		$(MAKE) bin/util/generate_rust_project >/dev/null 2>&1; \
+		./bin/util/generate_rust_project >/dev/null; \
 	else \
 		cp template/solve.cpp $(DAY_DIR)/solve.cpp; \
 	fi
@@ -62,6 +71,10 @@ run: init
 		cmake --build build --target $(YEAR)_Day$(DAY) 2>&1 | grep -v "Entering\|Leaving\|Built target" || true; \
 	fi
 	@echo "" && cd $(DAY_DIR) && $(CURDIR)/$(TARGET_EXE)
+
+rust-project: bin/util/generate_rust_project
+	@echo "Regenerating rust-project.json..."
+	@./bin/util/generate_rust_project
 
 clean:
 	rm -rf $(BIN_DIR)
