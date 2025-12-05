@@ -1,15 +1,32 @@
 # Advent of Code
 
-What is Advent of code?
+Personal solutions to [Advent of Code](https://adventofcode.com) puzzles in C++ and Rust.
 
-Quoted from the [website](https://adventofcode.com/2023/about):
-
-> Advent of Code is an Advent calendar of small programming puzzles for a variety of skill sets and skill levels that can be solved in any programming language you like.
-
-This repository contains my solutions to the puzzles of Advent of Code. (I'll mainly use C++, but I might use other languages as well.)
-
-## Build
+## Quick Start
 
 ```bash
-make YEAR=<year>
+# Create new day (auto-detects current year)
+make add DAY=5
+
+# Run solution
+make run DAY=5
+
+# Rust support
+make add DAY=5 LANGUAGE=rust
+make run DAY=5 LANGUAGE=rust
+
+# Build all C++ solutions
+make all
+```
+
+## Structure
+
+```
+src/
+  YYYY/
+    Day01/
+      solve.cpp     # C++ solution
+      solve.rs      # Rust solution (optional)
+      input.txt     # Puzzle input
+      example.txt   # Example input
 ```
