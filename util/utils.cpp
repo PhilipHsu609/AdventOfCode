@@ -1,5 +1,11 @@
 #include "utils.hpp"
 
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
+
 namespace utils {
 
 void set_working_dir(const char *file_path) {
