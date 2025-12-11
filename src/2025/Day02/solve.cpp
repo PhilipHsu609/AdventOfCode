@@ -18,7 +18,7 @@ struct Range {
 auto read_input(const fs::path &path) {
     auto lines = utils::read_lines(path);
     std::vector<Range> ranges;
-    for (const auto &part : utils::split(lines[0], ',')) {
+    for (const auto &part : utils::split(lines[0], ",")) {
         Range r{};
         auto it = part.find('-');
         r.start = std::stoll(part.substr(0, it));

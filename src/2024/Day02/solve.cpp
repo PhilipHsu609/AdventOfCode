@@ -25,7 +25,7 @@ int part1(const fs::path &input_path) {
 
     std::string line;
     while (std::getline(input, line)) {
-        auto report = utils::split<int>(line, ' ');
+        auto report = utils::split<int>(line, " ");
 
         bool inc = true;
         bool dec = true;
@@ -94,7 +94,7 @@ int part2(const fs::path &input_path) {
 
     std::string line;
     while (std::getline(input, line)) {
-        auto report = utils::split<int>(line, ' ');
+        auto report = utils::split<int>(line, " ");
 
         bool inc = true;
         bool dec = true;

@@ -28,7 +28,7 @@ auto read_input(const fs::path &path) {
         // [.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}
         Machine machine{};
 
-        auto parts = utils::split(line, ' ');
+        auto parts = utils::split(line, " ");
 
         // First part is target state
         auto target_str = parts[0].substr(1, parts[0].size() - 2);
@@ -44,14 +44,14 @@ auto read_input(const fs::path &path) {
         std::vector<std::vector<int>> buttons;
         for (size_t i = 1; i < parts.size() - 1; ++i) {
             auto button_str = parts[i].substr(1, parts[i].size() - 2);
-            std::vector<int> button = utils::split<int>(button_str, ',');
+            std::vector<int> button = utils::split<int>(button_str, ",");
             buttons.push_back(button);
         }
         machine.buttons = buttons;
 
         // Last part is joltage list
         auto joltage_str = parts.back().substr(1, parts.back().size() - 2);
-        machine.joltage = utils::split<int>(joltage_str, ',');
+        machine.joltage = utils::split<int>(joltage_str, ",");
 
         machines.push_back(machine);
     }

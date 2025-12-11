@@ -25,7 +25,7 @@ auto read_input(const fs::path &path) {
     points.reserve(lines.size());
 
     for (const auto &line : lines) {
-        auto parts = utils::split(line, ',');
+        auto parts = utils::split(line, ",");
         points.push_back({std::stoll(parts[0]), std::stoll(parts[1])});
     }
     return points;

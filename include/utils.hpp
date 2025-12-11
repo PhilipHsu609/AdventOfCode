@@ -7,6 +7,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <string_view>
 #include <type_traits>
 #include <vector>
 
@@ -47,10 +48,8 @@ void assert_eq(const T &actual, const T &expected, const std::string &msg) {
 }
 
 template <typename T = std::string>
-inline std::vector<T> split(const std::string &s, char delim) {
+inline std::vector<T> split(const std::string &s, std::string_view delim) {
     std::vector<T> result;
-    std::stringstream ss(s);
-    std::string item;
 
     auto cvt = [](const std::string &str) -> T {
         if constexpr (std::is_integral_v<T>) {
@@ -62,9 +61,16 @@ inline std::vector<T> split(const std::string &s, char delim) {
         }
     };
 
-    while (std::getline(ss, item, delim)) {
-        result.emplace_back(cvt(item));
+    size_t start = 0;
+    size_t end = s.find(delim);
+
+    while (end != std::string::npos) {
+        result.emplace_back(cvt(s.substr(start, end - start)));
+        start = end + delim.length();
+        end = s.find(delim, start);
     }
+
+    result.emplace_back(cvt(s.substr(start)));
     return result;
 }
 } // namespace utils

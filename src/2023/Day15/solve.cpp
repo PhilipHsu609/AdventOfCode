@@ -31,7 +31,7 @@ int part1(const fs::path &input_path) {
 
     std::string line;
     std::getline(input, line);
-    auto steps = utils::split<std::string>(line, ',');
+    auto steps = utils::split<std::string>(line, ",");
 
     int sum = 0;
     for (const auto &step : steps) {
@@ -51,7 +51,7 @@ int part2(const fs::path &input_path) {
 
     std::string line;
     std::getline(input, line);
-    auto steps = utils::split<std::string>(line, ',');
+    auto steps = utils::split<std::string>(line, ",");
 
     std::array<std::list<int>, 256> HASHMAP{};
     std::array<std::unordered_map<std::string, std::list<int>::iterator>, 256> LABELS{};

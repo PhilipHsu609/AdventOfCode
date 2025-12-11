@@ -148,9 +148,9 @@ long long part1(const fs::path &input_path) {
     long long ans = 0;
     std::string line;
     while (std::getline(input, line)) {
-        auto parts = utils::split(line, ' ');
+        auto parts = utils::split(line, " ");
         const std::string pattern = parts[0] + '.'; // add a trailing '.' for convenience
-        const std::vector<int> records = utils::split<int>(parts[1], ',');
+        const std::vector<int> records = utils::split<int>(parts[1], ",");
 
         Memo memo(pattern.size() + 1, std::vector<long long>(records.size() + 1, -1));
         ans += dp_solver(0, 0, pattern, records, memo);
@@ -170,9 +170,9 @@ long long part2(const fs::path &input_path) {
     long long ans = 0;
     std::string line;
     while (std::getline(input, line)) {
-        auto parts = utils::split(line, ' ');
+        auto parts = utils::split(line, " ");
         std::string pattern = parts[0] + '?';
-        std::vector<int> records = utils::split<int>(parts[1], ',');
+        std::vector<int> records = utils::split<int>(parts[1], ",");
 
         // duplicate the pattern and records
         pattern = dup(pattern, 5);

@@ -25,7 +25,7 @@ auto read_input(const fs::path &path) {
     std::vector<Point> coords;
     coords.reserve(lines.size());
     for (const auto &line : lines) {
-        auto values = utils::split<int>(line, ',');
+        auto values = utils::split<int>(line, ",");
         coords.emplace_back(Point{values[0], values[1], values[2]});
     }
     return coords;

@@ -101,7 +101,7 @@ void part2() {
 
     // Read seeds
     std::getline(input, line);
-    std::vector<std::string> seeds = utils::split(line, ' ');
+    std::vector<std::string> seeds = utils::split(line, " ");
     for (std::size_t i = 1; i < seeds.size(); i += 2) {
         long long seed_start = std::stoll(seeds[i]);
         long long len = std::stoll(seeds[i + 1]);
