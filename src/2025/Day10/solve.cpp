@@ -61,6 +61,135 @@ auto read_input(const fs::path &path) {
 
 // Helper functions here
 
+// A large value for 'infinity' cost, but safe from overflow when adding
+const int INF = std::numeric_limits<int>::max() / 2;
+
+// Solves integer linear systems Ax = b with non-negative constraints
+// Uses Gaussian elimination + backtracking for free variables
+struct IntegerSolver {
+    int rows, cols;
+    std::vector<std::vector<int>> A; // Augmented matrix [A|b]
+    std::vector<int> best_solution;
+    int min_total_presses = INF;
+
+    IntegerSolver(const std::vector<std::vector<int>> &matrix) : A(matrix) {
+        rows = static_cast<int>(A.size());
+        cols = static_cast<int>(A[0].size()) - 1; // Last column is b
+    }
+
+    // Convert to row echelon form preserving integer arithmetic
+    void reduce() {
+        int pivot_row = 0;
+        for (int col = 0; col < cols && pivot_row < rows; ++col) {
+            // Find non-zero pivot
+            int r = pivot_row;
+            while (r < rows && A[r][col] == 0) {
+                ++r;
+            }
+
+            if (r == rows) {
+                continue;
+            }
+
+            std::swap(A[pivot_row], A[r]);
+
+            // Eliminate below using: row[rr] = row[rr]*pivot - row[pivot]*A[rr][col]
+            // This avoids division and preserves integer precision
+            for (int rr = pivot_row + 1; rr < rows; ++rr) {
+                if (A[rr][col] == 0) {
+                    continue;
+                }
+
+                int mult_rr = A[pivot_row][col];
+                int mult_pivot = A[rr][col];
+
+                for (int c = col; c <= cols; ++c) {
+                    A[rr][c] = A[rr][c] * mult_rr - A[pivot_row][c] * mult_pivot;
+                }
+            }
+            ++pivot_row;
+        }
+    }
+
+    // Back-substitution with backtracking for free variables
+    void solve_recursive(int row_idx, int current_presses, std::vector<int> &solution) {
+        if (current_presses >= min_total_presses) {
+            return;
+        }
+
+        if (row_idx < 0) {
+            min_total_presses = current_presses;
+            best_solution = solution;
+            return;
+        }
+
+        // Find pivot column (first non-zero coefficient)
+        int pivot_col = -1;
+        for (int j = 0; j < cols; ++j) {
+            if (A[row_idx][j] != 0) {
+                pivot_col = j;
+                break;
+            }
+        }
+
+        // Zero row: check consistency (0 = 0 is valid, 0 = non-zero is inconsistent)
+        if (pivot_col == -1) {
+            if (A[row_idx][cols] != 0) {
+                return;
+            }
+            solve_recursive(row_idx - 1, current_presses, solution);
+            return;
+        }
+
+        // Check for unassigned free variables to the right
+        int first_free = -1;
+        for (int j = cols - 1; j > pivot_col; --j) {
+            if (solution[j] == -1) {
+                first_free = j;
+                break;
+            }
+        }
+
+        // If free variable exists, enumerate values
+        if (first_free != -1) {
+            for (int val = 0; val < 1000; ++val) {
+                solution[first_free] = val;
+                if (current_presses + val < min_total_presses) {
+                    solve_recursive(row_idx, current_presses + val, solution);
+                }
+                solution[first_free] = -1;
+            }
+            return;
+        }
+
+        // Solve for pivot variable: x[pivot] = (b - sum(A[j]*x[j])) / A[pivot]
+        int sum_known = 0;
+        for (int j = pivot_col + 1; j < cols; ++j) {
+            sum_known += A[row_idx][j] * solution[j];
+        }
+
+        int remainder = A[row_idx][cols] - sum_known;
+        int pivot_coeff = A[row_idx][pivot_col];
+
+        // Check integer divisibility and non-negativity
+        if (remainder % pivot_coeff != 0 || remainder / pivot_coeff < 0) {
+            return;
+        }
+
+        int x_val = remainder / pivot_coeff;
+        solution[pivot_col] = x_val;
+        solve_recursive(row_idx - 1, current_presses + x_val, solution);
+        solution[pivot_col] = -1;
+    }
+
+    int solve() {
+        reduce();
+        std::vector<int> current_sol(cols, -1);
+        solve_recursive(rows - 1, 0, current_sol);
+        return (min_total_presses == INF) ? 0 : min_total_presses;
+    }
+};
+
 template <typename T>
 auto part1(const T &input) {
     int ret = 0;
@@ -121,40 +250,8 @@ auto part2(const T &input) {
             M[i][n] = machine.joltage[i];
         }
 
-        // Print initial matrix for debugging
-        fmt::print("Initial Matrix:\n");
-        for (const auto &row : M) {
-            fmt::print("{}", row);
-        }
-
-        // Convert M to RREF
-        size_t pivot_row = 0;
-        std::vector<int> pivot_col_for_row(m, -1);
-        for (size_t col = 0; col < n && pivot_row < m; ++col) {
-            // Find the first row with a leading 1 in this column
-            size_t r{};
-            for (r = pivot_row; r < m; ++r) {
-                if (M[r][col] != 0) {
-                    break;
-                }
-            }
-
-            std::swap(M[pivot_row], M[r]);
-            pivot_col_for_row[pivot_row] = static_cast<int>(col);
-
-            // Eliminate all other rows below
-            for (size_t rr = pivot_row + 1; rr < m; ++rr) {
-                for (size_t c = col; c <= n; ++c) {
-                    M[rr][c] -= M[pivot_row][c] * M[rr][col];
-                }
-            }
-            ++pivot_row;
-        }
-
-        // Print RREF for debugging
-        for (const auto &row : M) {
-            fmt::print("{}", row);
-        }
+        IntegerSolver solver(M);
+        ret += solver.solve();
     }
 
     return ret;
